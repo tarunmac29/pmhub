@@ -1,7 +1,7 @@
 package com.pmhub.controller;
 
 import com.pmhub.dto.RegisterRequest;
-import com.pmhub.dto.LoginRequest;  // make sure this exists
+import com.pmhub.dto.LoginRequest;
 import com.pmhub.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,6 +13,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @RestController
@@ -31,28 +32,36 @@ public class AuthRestController {
         System.out.println("Email: " + request.getEmail());
         System.out.println("Password: " + request.getPassword());
 
+        Map<String, String> response = new HashMap<>();
+
         try {
             userService.registerUser(
                     request.getUsername(),
                     request.getEmail(),
                     request.getPassword()
             );
-            return ResponseEntity.ok("User registered successfully.");
+            response.put("message", "User registered successfully.");
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            response.put("message", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
     }
 
     @PostMapping("/login")
     public ResponseEntity<?> loginUser(@RequestBody LoginRequest request) {
+        Map<String, String> response = new HashMap<>();
+
         try {
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
             );
             SecurityContextHolder.getContext().setAuthentication(authentication);
-            return ResponseEntity.ok("Login successful");
+            response.put("message", "Login successful");
+            return ResponseEntity.ok(response);
         } catch (AuthenticationException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
+            response.put("message", "Invalid credentials");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
         }
     }
 }
