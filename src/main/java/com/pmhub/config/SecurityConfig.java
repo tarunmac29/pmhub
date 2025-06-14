@@ -27,8 +27,12 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/register", "/api/auth/login").permitAll()
-                        .anyRequest().authenticated()
+                        .requestMatchers("/api/auth/register",
+                                "/api/auth/login",
+                                "/api/projects/**",
+                                "/api/tasks/**"
+                        ).permitAll()
+                        .anyRequest().permitAll()
                 )
                 .formLogin(form -> form.disable())  // Important: disable form login
                 .logout(logout -> logout.permitAll());

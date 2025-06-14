@@ -1,25 +1,61 @@
 package com.pmhub.Entity;
+
+
+import com.pmhub.enums.ProjectAccess;
+import com.pmhub.enums.ProjectType;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
-@Setter
+@Table(name = "Projects")
 @Getter
-@AllArgsConstructor
+@Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class ProjectEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long projectId;
 
+    @Column(nullable = false, length = 255)
     private String name;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private ProjectType projectType = ProjectType.Team_managed;
+
+    @Column(nullable = false)
+    private String projectKey;
+
+    @Column(columnDefinition = "TEXT")
     private String description;
 
-    @ManyToOne
-    private UserEntity owner;
+    private LocalDate startDate;
 
-    // getters/setters
+    private LocalDate endDate;
+
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private ProjectAccess access = ProjectAccess.Open;
+
+    @ManyToOne
+    @JoinColumn(name = "created_by", referencedColumnName = "userId")
+    private UserEntity createdBy;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "tenant_id", nullable = false)
+    private Tenant tenant;
+
+    @Column(nullable = false)
+    private LocalDateTime createdAt;
+
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = LocalDateTime.now();
+    }
+
 }
