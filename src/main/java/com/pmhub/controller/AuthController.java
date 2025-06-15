@@ -1,7 +1,7 @@
 package com.pmhub.controller;
 
 
-import com.pmhub.service.UserService;
+import com.pmhub.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
 
     @Autowired
-    private UserService userService;
+    private AuthService authService;
 
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -29,7 +29,7 @@ public class AuthController {
                                @RequestParam String email,
                                @RequestParam String password) {
         try {
-            userService.registerUser(username, email, password);
+            authService.registerUser(username, email, password);
             return "User registered successfully. Please login.";
         } catch (Exception e) {
             return "Registration failed: " + e.getMessage();
