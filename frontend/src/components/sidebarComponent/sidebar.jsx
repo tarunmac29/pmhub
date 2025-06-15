@@ -181,8 +181,14 @@ const Sidebar = () => {
         </li>
 
         <li className="flex items-center space-x-2">
-          <FaUsers />
+          <button
+            className="flex items-center space-x-2 w-full text-left hover:bg-indigo-50 rounded px-2 py-1"
+            onClick={() => navigate("/teams")}
+          >
+            <FaUsers />
           {!collapsed && <span>Teams</span>}
+          </button>
+          
         </li>
         <li className="flex items-center space-x-2">
           <FaBullseye />

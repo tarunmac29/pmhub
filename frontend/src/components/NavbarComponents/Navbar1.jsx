@@ -10,6 +10,8 @@ const Navbar = () => {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("isLoggedIn");
+    localStorage.removeItem("username");
     navigate("/login");
   };
 
@@ -57,11 +59,23 @@ const Navbar = () => {
           <FaQuestionCircle className="text-gray-600 hover:text-black cursor-pointer" />
           <FaCog className="text-gray-600 hover:text-black cursor-pointer" />
           
+          <div>
+<button
+              className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
+              onClick={handleLogout}
+            >
+              Logout
+            </button>
+          </div>
+          
           <img
             src="https://i.pravatar.cc/150?img=56"
             alt="User Avatar"
             className="w-8 h-8 rounded-full border cursor-pointer"
-            onClick={() => setIsModalOpen(true)}
+            onClick={() => {
+                setIsModalOpen(true);
+                console.log("Avatar clicked, modal should open");
+              }}
           />
 
           {isLoggedIn && (

@@ -21,7 +21,7 @@ const Layout = ({ children }) => {
         </main>
 
         {/* Optional Right Aside Panel */}
-        <aside className="w-72 bg-white border-l p-4 hidden lg:block">
+        {/* <aside className="w-72 bg-white border-l p-4 hidden lg:block">
           <div className="bg-orange-100 border border-orange-300 p-4 rounded">
             <h4 className="font-semibold mb-1">💡 Jira Product Discovery</h4>
             <p className="text-sm text-gray-700 mb-3">
@@ -44,7 +44,7 @@ const Layout = ({ children }) => {
               <button className="text-blue-600">Learn more</button>
             </div>
           </div>
-        </aside>
+        </aside> */}
       </div>
     </div>
   );

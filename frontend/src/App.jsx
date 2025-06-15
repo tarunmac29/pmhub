@@ -11,6 +11,7 @@ import ForYou from './components/sidebarComponent/ForYou';
 import Layout from './layout/Layout';
 import TenantCreate from './pages/TenantCreate'; // ✅ Add this
 import ProjectDashboard from './pages/Project/ProjectDashboard';
+import TeamsPage from './components/Team-Management/TeamsPage';
 
 
 function App() {
@@ -29,6 +30,17 @@ function App() {
             <PrivateRoute>
               <Layout>
                 <ProjectDashboard />
+              </Layout>
+            </PrivateRoute>
+          }
+        />
+
+        <Route 
+          path="/teams"
+          element={
+            <PrivateRoute>
+              <Layout>
+                <TeamsPage />
               </Layout>
             </PrivateRoute>
           }
