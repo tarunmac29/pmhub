@@ -2,12 +2,14 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { FaUserPlus, FaRocket } from "react-icons/fa";
+import AddPeopleModal from "./AddPeopleModal"; // <-- Import the modal
 
 const TeamManage = () => {
   const { teamId } = useParams();
   const [team, setTeam] = useState(null);
   const [projectSummary, setProjectSummary] = useState(null);
   const [teamMembers, setTeamMembers] = useState([]);
+  const [isAddPeopleOpen, setIsAddPeopleOpen] = useState(false);
 
   useEffect(() => {
     axios
@@ -35,18 +37,27 @@ const TeamManage = () => {
 
   return (
     <div className="p-6 bg-white min-h-screen">
+      {/* AddPeopleModal */}
+      <AddPeopleModal
+        isOpen={isAddPeopleOpen}
+        onClose={() => setIsAddPeopleOpen(false)}
+      />
+
       {/* Header */}
       <div className="flex justify-between items-start mb-6">
         <div>
           <h1 className="text-3xl font-bold flex items-center gap-2">
-          {team.teamName}
+            {team.teamName}
           </h1>
           <p className="text-gray-500 mt-2">
             There’s no ‘description’ in team, but you could add one here.
           </p>
         </div>
-        <button className="flex items-center gap-2 bg-[#2563EB] text-white px-4 py-2 rounded hover:bg-gray-800">
-          <FaUserPlus /> Add people
+        <button
+          className="bg-blue-600 text-white px-4 py-2 rounded text-sm hover:bg-blue-700"
+          onClick={() => setIsAddPeopleOpen(true)}
+        >
+          Add people
         </button>
       </div>
 

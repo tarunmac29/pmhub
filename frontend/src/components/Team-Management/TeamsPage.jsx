@@ -5,7 +5,6 @@ import AddPeopleModal from "./AddPeopleModal";
 import CreateTeamModal from "./CreateTeamModal";
 import TeamCard from "./TeamCard";
 
-
 const TeamsPage = () => {
   const [isAddPeopleOpen, setIsAddPeopleOpen] = useState(false);
   const [isCreateTeamOpen, setIsCreateTeamOpen] = useState(false);
@@ -29,17 +28,21 @@ const TeamsPage = () => {
   return (
     <div className="p-8 bg-white min-h-screen">
       {/* Modals */}
-      <AddPeopleModal isOpen={isAddPeopleOpen} onClose={() => setIsAddPeopleOpen(false)} />
-      <CreateTeamModal isOpen={isCreateTeamOpen} onClose={() => setIsCreateTeamOpen(false)} />
+      <AddPeopleModal
+        isOpen={isAddPeopleOpen}
+        onClose={() => setIsAddPeopleOpen(false)}
+      />
+      <CreateTeamModal
+        isOpen={isCreateTeamOpen}
+        onClose={() => setIsCreateTeamOpen(false)}
+      />
 
       {/* Header and Actions */}
       <div className="mb-6">
         <div className="flex items-center justify-between mb-4">
           <h1 className="text-2xl font-semibold">Teams</h1>
           <div className="flex space-x-2">
-            <button className="border border-gray-300 px-4 py-2 rounded text-sm hover:bg-gray-100">
-              Manage users
-            </button>
+            
             <button
               className="border border-gray-300 px-4 py-2 rounded text-sm hover:bg-gray-100"
               onClick={() => setIsCreateTeamOpen(true)}
@@ -101,13 +104,12 @@ const TeamsPage = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {teams.map((team) => (
               <TeamCard
-  key={team.teamId}
-  team={team}
-  onDelete={(deletedId) =>
-    setTeams((prev) => prev.filter((t) => t.teamId !== deletedId))
-  }
-/>
-
+                key={team.teamId}
+                team={team}
+                onDelete={(deletedId) =>
+                  setTeams((prev) => prev.filter((t) => t.teamId !== deletedId))
+                }
+              />
             ))}
           </div>
         )}
