@@ -12,6 +12,7 @@ import Layout from './layout/Layout';
 import TenantCreate from './pages/TenantCreate'; // ✅ Add this
 import ProjectDashboard from './pages/Project/ProjectDashboard';
 import TeamsPage from './components/Team-Management/TeamsPage';
+import TeamManage from './components/Team-Management/TeamManage';
 
 
 function App() {
@@ -35,6 +36,16 @@ function App() {
           }
         />
 
+        <Route
+          path="/TeamManage/:teamId"
+          element={
+            <PrivateRoute>
+              <Layout>
+                <TeamManage />
+              </Layout>
+            </PrivateRoute>
+          }
+        />
         <Route 
           path="/teams"
           element={

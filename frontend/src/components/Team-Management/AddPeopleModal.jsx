@@ -5,6 +5,7 @@ const AddPeopleModal = ({ isOpen, onClose }) => {
   const [selectedTeam, setSelectedTeam] = useState("");
   const [teams, setTeams] = useState([]);
   const [userMap, setUserMap] = useState([]);
+  const [selectedUserId, setSelectedUserId] = useState("");
   const [selectedUsername, setSelectedUsername] = useState("");
   const [selectedEmail, setSelectedEmail] = useState("");
 
@@ -23,22 +24,27 @@ const AddPeopleModal = ({ isOpen, onClose }) => {
     }
   }, [isOpen]);
 
-  const handleUsernameChange = (username) => {
-    setSelectedUsername(username);
-    const matchedUser = userMap.find((u) => u.username === username);
-    setSelectedEmail(matchedUser ? matchedUser.email : "");
+  const handleUserSelect = (userId) => {
+    setSelectedUserId(userId);
+    const user = userMap.find((u) => u.userId.toString() === userId);
+    if (user) {
+      setSelectedUsername(user.username);
+      setSelectedEmail(user.email);
+    } else {
+      setSelectedUsername("");
+      setSelectedEmail("");
+    }
   };
 
   const handleAdd = async () => {
-    if (!selectedUsername || !selectedEmail || !selectedTeam) {
-      alert("Please select a username, email, and a team.");
+    if (!selectedUserId || !selectedTeam) {
+      alert("Please select a user and a team.");
       return;
     }
 
     try {
-      await axios.post("http://localhost:8080/api/addpeople", {
-        name: selectedUsername,
-        email: selectedEmail,
+      await axios.post("http://localhost:8080/api/teams/members/addpeople", {
+        userId: selectedUserId,
         teamId: selectedTeam,
       });
       alert("Person added successfully!");
@@ -56,39 +62,31 @@ const AddPeopleModal = ({ isOpen, onClose }) => {
       <div className="bg-white w-full max-w-lg rounded-lg shadow-lg p-6">
         <h2 className="text-xl font-semibold mb-4">Add people</h2>
 
-        {/* Username select */}
+        {/* Username dropdown */}
         <label className="block mb-1 font-medium">
           Select a Username <span className="text-red-500">*</span>
         </label>
         <select
-          value={selectedUsername}
-          onChange={(e) => handleUsernameChange(e.target.value)}
+          value={selectedUserId}
+          onChange={(e) => handleUserSelect(e.target.value)}
           className="w-full border border-gray-300 rounded px-4 py-2 mb-4 text-sm"
         >
           <option value="">Select a username</option>
-          {userMap.map((user, idx) => (
-            <option key={user.username + idx} value={user.username}>
+          {userMap.map((user) => (
+            <option key={user.userId} value={user.userId}>
               {user.username}
             </option>
           ))}
         </select>
 
-        {/* Email select (auto-filled, disabled) */}
-        <label className="block mb-1 font-medium">
-          Email (auto-filled) <span className="text-red-500">*</span>
-        </label>
-        <select
+        {/* Email (auto-filled and disabled) */}
+        <label className="block mb-1 font-medium">Email</label>
+        <input
+          type="text"
           value={selectedEmail}
           disabled
           className="w-full border border-gray-300 rounded px-4 py-2 mb-4 text-sm bg-gray-100"
-        >
-          <option value="">Select an email</option>
-          {userMap.map((user, idx) => (
-            <option key={user.email + idx} value={user.email}>
-              {user.email}
-            </option>
-          ))}
-        </select>
+        />
 
         {/* Team select */}
         <label className="block mb-1 font-medium">
@@ -106,19 +104,6 @@ const AddPeopleModal = ({ isOpen, onClose }) => {
             </option>
           ))}
         </select>
-
-        {/* reCAPTCHA notice */}
-        <p className="text-xs text-gray-500 mb-4">
-          This site is protected by reCAPTCHA and the Google{" "}
-          <a href="https://policies.google.com/privacy" className="underline">
-            Privacy Policy
-          </a>{" "}
-          and{" "}
-          <a href="https://policies.google.com/terms" className="underline">
-            Terms of Service
-          </a>{" "}
-          apply.
-        </p>
 
         {/* Actions */}
         <div className="flex justify-end space-x-2">
