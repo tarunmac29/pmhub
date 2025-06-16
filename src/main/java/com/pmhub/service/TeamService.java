@@ -12,7 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class TeamService {
@@ -26,6 +28,11 @@ public class TeamService {
     private TeamMemberRepository teamMemberRepository;
 
     // Add methods to handle team-related operations, such as creating a team, adding members, etc.
+
+    public TeamEntity getTeamByProjectId(Long projectId) {
+        return teamRepository.findByProject_ProjectId(projectId)
+                .orElseThrow(() -> new RuntimeException("Team not found for projectId: " + projectId));
+    }
 
     // create a team
     public TeamEntity createTeam(String teamName, Long projectId) {
@@ -42,6 +49,24 @@ public class TeamService {
 
         return savedTeam;
     }
+
+    public List<Map<String, Object>> getTeamMembersByTeamId(Long teamId) {
+        TeamEntity team = teamRepository.findById(teamId)
+                .orElseThrow(() -> new RuntimeException("Team not found"));
+
+        List<TeamMemberEntity> members = teamMemberRepository.findByTeam(team);
+
+        return members.stream().map(member -> {
+            UserEntity user = member.getUser();
+            Map<String, Object> map = new HashMap<>();
+            map.put("userId", user.getUserId());
+            map.put("username", user.getUsername());
+            return map;
+        }).toList();
+    }
+
+
+
 
     public void deleteTeam(Long teamId) {
         teamRepository.deleteById(teamId);

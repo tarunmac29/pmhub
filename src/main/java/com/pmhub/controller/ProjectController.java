@@ -28,6 +28,19 @@ public class ProjectController {
         return ResponseEntity.ok(savedProject);
     }
 
+    // Get only project key by project ID
+    @GetMapping("/{id}/key")
+    public ResponseEntity<?> getProjectKeyById(@PathVariable Long id) {
+        Optional<ProjectEntity> project = projectService.getProjectById(id);
+        if (project.isPresent()) {
+            Map<String, String> response = new HashMap<>();
+            response.put("projectKey", project.get().getProjectKey());
+            return ResponseEntity.ok(response);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     // Get specific fields of a project by ID without using DTO
     @GetMapping("/{id}/summary")
     public ResponseEntity<?> getProjectSummary(@PathVariable Long id) {

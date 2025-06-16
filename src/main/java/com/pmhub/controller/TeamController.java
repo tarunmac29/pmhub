@@ -27,6 +27,16 @@ public class TeamController {
         teamService.deleteTeam(teamId);
     }
 
+    @GetMapping("/project/{projectId}/team")
+    public TeamEntity getTeamByProjectId(@PathVariable Long projectId) {
+        return teamService.getTeamByProjectId(projectId);
+    }
+
+    @GetMapping("/{teamId}/members")
+    public List<Map<String, Object>> getTeamMembers(@PathVariable Long teamId) {
+        return teamService.getTeamMembersByTeamId(teamId);
+    }
+
 
     @GetMapping("/{teamId}")
     public TeamEntity getTeamById(@PathVariable Long teamId) {

@@ -1,5 +1,6 @@
 package com.pmhub.Repository;
 
+import com.pmhub.Entity.TeamEntity;
 import com.pmhub.Entity.TeamMemberEntity;
 import com.pmhub.Entity.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,5 +13,7 @@ public interface TeamMemberRepository extends JpaRepository<TeamMemberEntity, Lo
 
     @Query("SELECT tm.user FROM TeamMemberEntity tm WHERE tm.team.teamId = :teamId")
     List<UserEntity> findMembersByTeamId(@Param("teamId") Long teamId);
+
+    List<TeamMemberEntity> findByTeam(TeamEntity team);
 
 }
