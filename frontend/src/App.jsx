@@ -13,6 +13,7 @@ import TenantCreate from './pages/TenantCreate'; // ✅ Add this
 import ProjectDashboard from './pages/Project/ProjectDashboard';
 import TeamsPage from './components/Team-Management/TeamsPage';
 import TeamManage from './components/Team-Management/TeamManage';
+import ListView from './pages/Project/List/ListView'; // ✅ Add this
 
 
 function App() {
@@ -24,6 +25,20 @@ function App() {
         <Route path="/contact" element={<Contact />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+
+        <Route
+          path="/project/:projectId/list-view" 
+          element={
+            <PrivateRoute>
+              <Layout>
+                <ListView />
+              </Layout >
+            </PrivateRoute>
+          }
+        />
+      
+        
+
 
         <Route
           path="/projectdashboard/:projectId"

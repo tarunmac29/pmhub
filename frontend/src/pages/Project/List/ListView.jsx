@@ -1,9 +1,16 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FaPlus, FaFilter, FaUserCircle } from "react-icons/fa";
 import TypeSelector from "./TypeSelector";
+import axios from "axios";
+import { useParams } from "react-router-dom";
+import StatusDropdown from "./StatusDropdown"; // ✅ imported from separate file
 
 const ListView = () => {
+  const { projectId } = useParams();
+  const [projectKey, setProjectKey] = useState("");
   const [showCreateForm, setShowCreateForm] = useState(false);
+  const [members, setMembers] = useState([]);
+
   const [formData, setFormData] = useState({
     type: "Task",
     key: "",
@@ -13,8 +20,37 @@ const ListView = () => {
     updated: "",
     created: "",
     team: "",
-    reporter: ""
+    reporter: "",
   });
+
+  useEffect(() => {
+    const fetchProjectData = async () => {
+      try {
+        const keyRes = await axios.get(`http://localhost:8080/api/projects/${projectId}/key`);
+        const teamRes = await axios.get(`http://localhost:8080/api/teams/project/${projectId}/team`);
+
+        const key = keyRes.data.projectKey;
+        const teamName = teamRes.data.teamName;
+        const teamId = teamRes.data.teamId;
+
+        const membersRes = await axios.get(`http://localhost:8080/api/teams/${teamId}/members`);
+
+        setFormData((prev) => ({
+          ...prev,
+          key,
+          team: teamName,
+        }));
+
+        setMembers(membersRes.data);
+      } catch (err) {
+        console.error("Error fetching project/team/members:", err);
+      }
+    };
+
+    if (showCreateForm && projectId) {
+      fetchProjectData();
+    }
+  }, [showCreateForm, projectId]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -33,7 +69,7 @@ const ListView = () => {
       updated: "",
       created: "",
       team: "",
-      reporter: ""
+      reporter: "",
     });
   };
 
@@ -62,8 +98,7 @@ const ListView = () => {
       {/* Table */}
       <div className="bg-white border rounded-md overflow-x-auto">
         {/* Header */}
-        <div className="grid grid-cols-9 gap-2 px-4 py-3 border-b text-sm bg-gray-50 min-w-[1000px] overflow-visible relative">
-
+        <div className="grid grid-cols-9 gap-2 px-4 py-3 border-b text-sm bg-gray-50 min-w-[1000px]">
           <div>Type</div>
           <div>Key</div>
           <div>Summary</div>
@@ -81,36 +116,92 @@ const ListView = () => {
             onClick={() => setShowCreateForm(true)}
             className="px-4 py-2 hover:bg-gray-50 text-sm text-blue-600 border-b cursor-pointer flex items-center gap-2"
           >
-            <FaPlus className="text-xs" />
-            + Create
+            <FaPlus className="text-xs" />+ Create
           </div>
         )}
 
-        {/* Create Form Row */}
+        {/* Create Form */}
         {showCreateForm && (
           <>
             <div className="grid grid-cols-9 gap-2 px-4 py-3 border-b text-sm bg-gray-50 min-w-[1000px]">
-              <TypeSelector value={formData.type} onChange={(val) => setFormData({ ...formData, type: val })} />
-              <input name="key" value={formData.key} onChange={handleChange} placeholder="Key" className="border px-2 py-1 rounded-md" />
-              <input name="summary" value={formData.summary} onChange={handleChange} placeholder="Summary" className="border px-2 py-1 rounded-md" />
-              <select name="status" value={formData.status} onChange={handleChange} className="border px-2 py-1 rounded-md">
-                <option value="To Do">To Do</option>
-                <option value="In Progress">In Progress</option>
-                <option value="Done">Done</option>
+              <TypeSelector
+                value={formData.type}
+                onChange={(val) => setFormData({ ...formData, type: val })}
+              />
+              <input
+                name="key"
+                value={formData.key}
+                readOnly
+                onChange={handleChange}
+                placeholder="Key"
+                className="border px-2 py-1 rounded-md cursor-not-allowed"
+              />
+              <input
+                name="summary"
+                value={formData.summary}
+                onChange={handleChange}
+                placeholder="Summary"
+                className="border px-2 py-1 rounded-md"
+              />
+              <StatusDropdown
+                value={formData.status}
+                onChange={(val) => setFormData({ ...formData, status: val })}
+              />
+              <select
+                name="assignee"
+                value={formData.assignee}
+                onChange={handleChange}
+                className="border px-2 py-1 rounded-md"
+              >
+                <option value="">Select Assignee</option>
+                {members.map((member) => (
+                  <option key={member.userId} value={member.username}>
+                    {member.username}
+                  </option>
+                ))}
               </select>
-              <input name="assignee" value={formData.assignee} onChange={handleChange} placeholder="Assignee" className="border px-2 py-1 rounded-md" />
-              <input type="date" name="updated" value={formData.updated} onChange={handleChange} className="border px-2 py-1 rounded-md" />
-              <input type="date" name="created" value={formData.created} onChange={handleChange} className="border px-2 py-1 rounded-md" />
-              <input name="team" value={formData.team} onChange={handleChange} placeholder="Team" className="border px-2 py-1 rounded-md" />
-              <input name="reporter" value={formData.reporter} onChange={handleChange} placeholder="Reporter" className="border px-2 py-1 rounded-md" />
+              <input
+                type="date"
+                name="updated"
+                value={formData.updated}
+                onChange={handleChange}
+                className="border px-2 py-1 rounded-md"
+              />
+              <input
+                type="date"
+                name="created"
+                value={formData.created}
+                onChange={handleChange}
+                className="border px-2 py-1 rounded-md"
+              />
+              <input
+                name="team"
+                value={formData.team}
+                placeholder="Team"
+                className="border px-2 py-1 rounded-md bg-gray-100 cursor-not-allowed"
+                readOnly
+              />
+              <input
+                name="reporter"
+                value={formData.reporter}
+                onChange={handleChange}
+                placeholder="Reporter"
+                className="border px-2 py-1 rounded-md"
+              />
             </div>
 
             {/* Save & Cancel */}
             <div className="flex gap-2 px-4 py-2 border-b bg-gray-50">
-              <button onClick={handleCreate} className="bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700 text-sm">
+              <button
+                onClick={handleCreate}
+                className="bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700 text-sm"
+              >
                 Save
               </button>
-              <button onClick={() => setShowCreateForm(false)} className="bg-gray-300 px-4 py-1 rounded hover:bg-gray-400 text-sm">
+              <button
+                onClick={() => setShowCreateForm(false)}
+                className="bg-gray-300 px-4 py-1 rounded hover:bg-gray-400 text-sm"
+              >
                 Cancel
               </button>
             </div>
