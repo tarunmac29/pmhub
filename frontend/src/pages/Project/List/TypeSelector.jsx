@@ -29,7 +29,7 @@ const TypeSelector = ({ value, onChange }) => {
   };
 
   return (
-    <div className="relative" ref={wrapperRef}>
+    <div className="relative z-50" ref={wrapperRef}>
       <button
         type="button"
         className="border px-2 py-1 rounded-md w-full flex items-center gap-2"
@@ -40,7 +40,7 @@ const TypeSelector = ({ value, onChange }) => {
       </button>
 
       {isOpen && (
-        <div className="absolute mt-1 bg-white border rounded-md shadow-md z-10 w-full">
+        <div className="absolute mt-1 bg-white border rounded-md shadow-md z-50 w-full">
           {["Epic", "Story", "Task", "Bug"].map((type) => (
             <div
               key={type}

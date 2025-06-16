@@ -62,7 +62,8 @@ const ListView = () => {
       {/* Table */}
       <div className="bg-white border rounded-md overflow-x-auto">
         {/* Header */}
-        <div className="grid grid-cols-9 gap-2 items-center px-4 py-2 border-b text-xs font-medium text-gray-500 bg-gray-100 min-w-[1000px]">
+        <div className="grid grid-cols-9 gap-2 px-4 py-3 border-b text-sm bg-gray-50 min-w-[1000px] overflow-visible relative">
+
           <div>Type</div>
           <div>Key</div>
           <div>Summary</div>
