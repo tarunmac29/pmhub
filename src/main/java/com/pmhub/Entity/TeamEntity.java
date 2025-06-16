@@ -22,9 +22,7 @@ public class TeamEntity {
     @JoinColumn(name = "project_id")
     private ProjectEntity project;
 
-    @ManyToOne
-    @JoinColumn(name = "admin_id")
-    private UserEntity admin;
+
 
     // Additional fields and methods can be added as needed
 }

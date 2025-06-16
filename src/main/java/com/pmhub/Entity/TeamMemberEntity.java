@@ -23,4 +23,5 @@ public class TeamMemberEntity {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private UserEntity user;
+
 }

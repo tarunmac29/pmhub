@@ -1,6 +1,7 @@
 package com.pmhub.Entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.pmhub.enums.ProjectAccess;
 import com.pmhub.enums.ProjectType;
 import jakarta.persistence.*;
@@ -14,6 +15,8 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+
 public class ProjectEntity {
 
     @Id

@@ -1,22 +1,29 @@
 package com.pmhub.controller;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.pmhub.Entity.PeopleEntity;
 import com.pmhub.Entity.ProjectEntity;
 import com.pmhub.Repository.PeopleRepository;
 import com.pmhub.Repository.ProjectRepository;
+import com.pmhub.service.PeopleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class PeopleController {
 
     @Autowired
     private PeopleRepository peopleRepository;
+
+    @Autowired
+    private PeopleService peopleService;
 
     @Autowired
     private ProjectRepository projectRepository;
@@ -57,7 +64,16 @@ public class PeopleController {
         return ResponseEntity.ok("Person added successfully");
     }
 
+    @GetMapping("/people/by-project/{projectId}")
+    public ResponseEntity<List<PeopleEntity>> getPeopleByProject(@PathVariable Long projectId) {
+        List<PeopleEntity> people = peopleService.getPeopleByProjectId(projectId);
+        return ResponseEntity.ok(people);
+    }
 
-
+    @GetMapping("/people")
+    public ResponseEntity<List<PeopleEntity>> getAllPeople() {
+        List<PeopleEntity> people = peopleRepository.findAll();
+        return ResponseEntity.ok(people);
+    }
 
 }

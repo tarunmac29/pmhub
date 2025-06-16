@@ -28,34 +28,34 @@ public class TeamService {
     // Add methods to handle team-related operations, such as creating a team, adding members, etc.
 
     // create a team
-    public TeamEntity createTeam(String teamName, Long projectId, Long adminId, List<Long> memberIds) {
+    public TeamEntity createTeam(String teamName, Long projectId) {
         ProjectEntity project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new RuntimeException("Project not found"));
-
-        UserEntity admin = userRepository.findById(adminId)
-                .orElseThrow(() -> new RuntimeException("Admin user not found"));
 
         TeamEntity team = TeamEntity.builder()
                 .teamName(teamName)
                 .project(project)
-                .admin(admin)
                 .build();
 
         TeamEntity savedTeam = teamRepository.save(team);
 
-        for (Long userId : memberIds) {
-            UserEntity member = userRepository.findById(userId)
-                    .orElseThrow(() -> new RuntimeException("User not found: " + userId));
-
-            TeamMemberEntity teamMember = TeamMemberEntity.builder()
-                    .team(savedTeam)
-                    .user(member)
-                    .build();
-
-            teamMemberRepository.save(teamMember);
-        }
 
         return savedTeam;
+    }
+
+    public void deleteTeam(Long teamId) {
+        teamRepository.deleteById(teamId);
+    }
+
+
+    // get a team by id
+    public TeamEntity getTeamById(Long teamId) {
+        return teamRepository.findById(teamId)
+                .orElseThrow(() -> new RuntimeException("Team not found"));
+    }
+
+    public List<TeamEntity> getAllTeams() {
+        return teamRepository.findAll();
     }
 
 }

@@ -1,6 +1,7 @@
 package com.pmhub.controller;
 
 import com.pmhub.Entity.UserEntity;
+import com.pmhub.Repository.UserRepository;
 import com.pmhub.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +23,9 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private UserRepository userRepository;
+
     // GET: /api/users
     @GetMapping
     public ResponseEntity<List<Map<String, String>>> getUsernamesAndEmails() {
@@ -37,27 +41,47 @@ public class UserController {
         return ResponseEntity.ok(result);
     }
 
-    @GetMapping("/search-by-username")
-    public ResponseEntity<List<Map<String, String>>> searchByUsername(@RequestParam("q") String query) {
-        List<UserEntity> allUsers = userService.findAll();
+    @GetMapping("/username-email-map")
+    public ResponseEntity<List<Map<String, Object>>> getUsernameEmailMap() {
+        List<UserEntity> users = userRepository.findAll();
 
-        List<Map<String, String>> filtered = allUsers.stream()
-                .filter(user -> user.getUsername().toLowerCase().contains(query.toLowerCase()))
-                .map(user -> {
-                    Map<String, String> map = new HashMap<>();
-                    map.put("username", user.getUsername());
-                    map.put("email", user.getEmail());
-                    return map;
-                }).collect(Collectors.toList());
+        List<Map<String, Object>> result = users.stream().map(user -> {
+            Map<String, Object> map = new HashMap<>();
+            map.put("userId", user.getUserId());       // Long value
+            map.put("username", user.getUsername());
+            map.put("email", user.getEmail());
+            return map;
+        }).collect(Collectors.toList());
 
-        return ResponseEntity.ok(filtered);
+        return ResponseEntity.ok(result);
     }
+
 
 
     // GET: /api/users/search?username=abc&email=xyz@example.com
     @GetMapping("/search")
     public UserEntity getByUsernameOrEmail(@RequestParam String username, @RequestParam String email) {
         return userService.findByUsernameOrEmail(username, email);
+    }
+
+    // GET: /api/users/usernames
+    @GetMapping("/usernames")
+    public ResponseEntity<List<String>> getAllUsernames() {
+        List<UserEntity> users = userService.findAll();
+        List<String> usernames = users.stream()
+                .map(UserEntity::getUsername)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(usernames);
+    }
+
+    // GET: /api/users/emails
+    @GetMapping("/emails")
+    public ResponseEntity<List<String>> getAllEmails() {
+        List<UserEntity> users = userService.findAll();
+        List<String> emails = users.stream()
+                .map(UserEntity::getEmail)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(emails);
     }
 
 }
