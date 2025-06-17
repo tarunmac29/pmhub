@@ -9,7 +9,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -25,6 +27,40 @@ public class ProjectController {
         ProjectEntity savedProject = projectService.saveProject(project);
         return ResponseEntity.ok(savedProject);
     }
+
+    // Get only project key by project ID
+    @GetMapping("/{id}/key")
+    public ResponseEntity<?> getProjectKeyById(@PathVariable Long id) {
+        Optional<ProjectEntity> project = projectService.getProjectById(id);
+        if (project.isPresent()) {
+            Map<String, String> response = new HashMap<>();
+            response.put("projectKey", project.get().getProjectKey());
+            return ResponseEntity.ok(response);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    // Get specific fields of a project by ID without using DTO
+    @GetMapping("/{id}/summary")
+    public ResponseEntity<?> getProjectSummary(@PathVariable Long id) {
+        Optional<ProjectEntity> projectOptional = projectService.getProjectById(id);
+
+        if (projectOptional.isPresent()) {
+            ProjectEntity project = projectOptional.get();
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("projectKey", project.getProjectKey());
+            response.put("projectType", project.getProjectType());
+            response.put("name", project.getName());
+            response.put("access", project.getAccess());
+
+            return ResponseEntity.ok(response);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
 
 
     //Get All Projects

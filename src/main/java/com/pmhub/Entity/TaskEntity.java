@@ -23,33 +23,31 @@ public class TaskEntity {
     private Long taskId;
 
     @ManyToOne
-    @JoinColumn(name = "projectId", nullable = false)
+    @JoinColumn(name = "project_id")
     private ProjectEntity project;
 
-    @Column(nullable = false, length = 255)
+    @Column(length = 255)
     private String name;
 
     @Column(columnDefinition = "TEXT")
     private String description;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
     private TaskPriority priority = TaskPriority.MEDIUM;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
     private TaskStatus status = TaskStatus.TO_DO;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "tenant_id", nullable = false)
+    @JoinColumn(name = "tenant_id")
     private Tenant tenant;
 
     @Column(nullable = false)
     private Boolean completed = false;
 
     @ManyToOne
-    @JoinColumn(name = "assigned_id")
-    private UserEntity assignedUser;
+    @JoinColumn(name = "assignee_id")
+    private UserEntity assignee;
 
     private LocalDate dueDate;
 

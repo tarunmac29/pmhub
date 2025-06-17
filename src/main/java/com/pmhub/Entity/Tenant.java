@@ -1,12 +1,14 @@
 package com.pmhub.Entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.pmhub.enums.TenantStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
 
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Entity
 @Table(name = "Tenants")
 @Getter
@@ -19,13 +21,13 @@ public class Tenant {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long tenantId;
 
-    @Column(nullable = false, unique = true)
+    @Column(name = "tenant_name", nullable = false, unique = true)
     private String tenantName;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private TenantStatus status = TenantStatus.ACTIVE;
 
-    @Column(nullable = false)
+    @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 }

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Navbar from "./Navbar";
-import jwtDecode from "jwt-decode";
+import Navbar from "../../components/NavbarComponents/Navbar";
+
 function Login() {
   const [username, setUsername] = useState(""); // Changed from email
   const [password, setPassword] = useState("");
@@ -24,21 +24,17 @@ function Login() {
         body: JSON.stringify({ username, password }), // Send username instead of email
       });
 
-      const data = await response.json(); // Since your backend returns just a string
+      const data = await response.text(); // Since your backend returns just a string
 
       if (!response.ok) {
-        const errorMsg = data?.message || "Login failed";
+        const errorMsg = data?.message || data || "Login failed";
         alert("Invalid credentials"); // Show error in alert box
         throw new Error(errorMsg);
       }
 
       setSuccess("Login successful!");
       console.log("Login response:", data);
-
-      
       localStorage.setItem("isLoggedIn", "true");
-      const decoded = jwtDecode(data.token);
-      localStorage.setItem("username", decoded.sub);
       navigate("/dashboard"); // Redirect to Dashboard
     } catch (err) {
       setError(err.message);

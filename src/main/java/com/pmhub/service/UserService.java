@@ -3,10 +3,9 @@ package com.pmhub.service;
 import com.pmhub.Entity.UserEntity;
 import com.pmhub.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import java.util.List;
 
 @Service
 public class UserService {
@@ -14,24 +13,15 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    // Add methods to interact with the UserRepository as needed
 
-    public UserEntity registerUser(String username, String email, String  password) throws Exception{
-        if (userRepository.existsByUsername(username)){
-            throw new Exception("User Name Already Exist");
-        }
-
-        if (userRepository.existsByEmail(email)){
-            throw new Exception("User Email Alredy Exist");
-        }
-
-        String encodedPassword = passwordEncoder.encode(password);
-        UserEntity User = new UserEntity(username,email,encodedPassword);
-        return userRepository.save(User);
+    public UserEntity findByUsernameOrEmail(String username, String email) {
+        return userRepository.findByUsernameOrEmail(username, email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
     }
 
-    public Optional<UserEntity> findByUsername(String username) {
-        return userRepository.findByUsername(username);
+    public List<UserEntity> findAll() {
+        return userRepository.findAll();
     }
+
 }
