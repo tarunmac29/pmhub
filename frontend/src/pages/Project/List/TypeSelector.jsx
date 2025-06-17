@@ -12,7 +12,6 @@ const TypeSelector = ({ value, onChange }) => {
   const [isOpen, setIsOpen] = useState(false);
   const wrapperRef = useRef(null);
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
@@ -29,10 +28,10 @@ const TypeSelector = ({ value, onChange }) => {
   };
 
   return (
-    <div className="relative z-50" ref={wrapperRef}>
+    <div className="relative w-full" ref={wrapperRef}>
       <button
         type="button"
-        className="border px-2 py-1 rounded-md w-full flex items-center gap-2"
+        className="border px-2 py-1 rounded-md w-full flex items-center gap-2 text-sm"
         onClick={() => setIsOpen((prev) => !prev)}
       >
         {iconMap[value]}
@@ -40,7 +39,7 @@ const TypeSelector = ({ value, onChange }) => {
       </button>
 
       {isOpen && (
-        <div className="absolute mt-1 bg-white border rounded-md shadow-md z-50 w-full">
+        <div className="absolute top-full left-0 mt-1 bg-white border rounded-md shadow-md w-full z-10">
           {["Epic", "Story", "Task", "Bug"].map((type) => (
             <div
               key={type}
