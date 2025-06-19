@@ -29,10 +29,6 @@ public class TeamService {
 
     // Add methods to handle team-related operations, such as creating a team, adding members, etc.
 
-    public TeamEntity getTeamByProjectId(Long projectId) {
-        return teamRepository.findByProject_ProjectId(projectId)
-                .orElseThrow(() -> new RuntimeException("Team not found for projectId: " + projectId));
-    }
 
     // create a team
     public TeamEntity createTeam(String teamName, Long projectId) {
@@ -48,6 +44,10 @@ public class TeamService {
 
 
         return savedTeam;
+    }
+
+    public List<TeamEntity> getTeamsByProjectId(Long projectId) {
+        return teamRepository.findByProject_ProjectId(projectId);
     }
 
     public List<Map<String, Object>> getTeamMembersByTeamId(Long teamId) {

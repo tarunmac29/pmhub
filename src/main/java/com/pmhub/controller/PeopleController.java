@@ -33,10 +33,8 @@ public class PeopleController {
         String name = payload.get("name");
         String email = payload.get("email");
         String userIdStr = payload.get("userId");
-
+    
         String projectId = payload.get("projectId");
-
-
         if (name == null || email == null || projectId == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Missing required fields");
         }

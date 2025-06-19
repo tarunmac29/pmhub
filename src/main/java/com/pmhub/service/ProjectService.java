@@ -1,9 +1,9 @@
 package com.pmhub.service;
 
 import com.pmhub.Entity.ProjectEntity;
-import com.pmhub.Entity.Tenant;
+
 import com.pmhub.Repository.ProjectRepository;
-import com.pmhub.Repository.TenantRepository;
+
 import com.pmhub.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,17 +21,9 @@ public class ProjectService {
     @Autowired
     private UserRepository userRepository;
 
-    @Autowired
-    private TenantRepository tenantRepository;
-
-
     //Create or Update project
     public ProjectEntity saveProject(ProjectEntity project) {
-        // Validate tenant existence before saving
-        Tenant tenant = project.getTenant();
-        if (tenant == null || tenant.getTenantId() == null || !tenantRepository.existsById(tenant.getTenantId())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Tenant does not exist. Please provide a valid tenantId.");
-        }
+
         return projectRepository.save(project);
     }
 
@@ -57,9 +49,6 @@ public class ProjectService {
         return projectRepository.findByNameContainingIgnoreCase(keyword);
     }
 
-    public List<ProjectEntity> getProjectsByTenant(Long tenantId) {
-        return projectRepository.findByTenant_TenantId(tenantId);
-    }
 
     public ProjectEntity updateProject(Long id, ProjectEntity updatedProject) {
         return projectRepository.findById(id)
@@ -73,7 +62,7 @@ public class ProjectService {
 
                     existingProject.setAccess(updatedProject.getAccess());
                     existingProject.setCreatedBy(updatedProject.getCreatedBy());
-                    existingProject.setTenant(updatedProject.getTenant());
+
                     return projectRepository.save(existingProject);
                 })
                 .orElse(null); // or throw custom exception

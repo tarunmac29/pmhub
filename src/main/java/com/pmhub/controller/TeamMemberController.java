@@ -20,7 +20,6 @@ public class TeamMemberController {
         return ResponseEntity.ok(teamMemberService.getMembersByTeamId(teamId));
     }
 
-
     @PostMapping("/addpeople")
     public ResponseEntity<String> addPersonToTeam(@RequestBody Map<String, Object> payload) {
         Long userId = Long.parseLong(payload.get("userId").toString());

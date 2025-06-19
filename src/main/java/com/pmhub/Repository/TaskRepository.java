@@ -9,14 +9,12 @@ public interface TaskRepository extends JpaRepository<TaskEntity, Long> {
 
     List<TaskEntity> findByProject_ProjectId(Long projectId);
 
-    List<TaskEntity> findByNameContainingIgnoreCase(String name);
-
     List<TaskEntity> findByStatus(String status);
 
     List<TaskEntity> findByPriority(String priority);
 
     List<TaskEntity> findByProject_ProjectIdAndStatus(Long projectId, String status);
 
-
+    List<TaskEntity> findByProjectProjectId(Long projectId);
 
 }

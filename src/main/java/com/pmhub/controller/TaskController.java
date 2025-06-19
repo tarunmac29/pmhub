@@ -2,13 +2,18 @@ package com.pmhub.controller;
 
 import com.pmhub.Entity.TaskEntity;
 
+import com.pmhub.Repository.ProjectRepository;
+import com.pmhub.Repository.TeamRepository;
+import com.pmhub.Repository.UserRepository;
 import com.pmhub.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.config.Task;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/tasks")
@@ -24,9 +29,35 @@ public class TaskController {
     @Autowired
     private TaskService taskService;
 
+    @Autowired
+    private TeamRepository teamRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private ProjectRepository projectRepository;
+
+
      // Create or Update task
      @PostMapping
      public ResponseEntity<TaskEntity> createTask(@RequestBody TaskEntity task) {
+         // Fetch and set actual managed entities from DB
+         if (task.getAssignee() != null && task.getAssignee().getUserId() != null) {
+             task.setAssignee(userRepository.findById(task.getAssignee().getUserId())
+                     .orElseThrow(() -> new RuntimeException("User not found")));
+         }
+
+         if (task.getTeam() != null && task.getTeam().getTeamId() != null) {
+             task.setTeam(teamRepository.findById(task.getTeam().getTeamId())
+                     .orElseThrow(() -> new RuntimeException("Team not found")));
+         }
+
+         if (task.getProject() != null && task.getProject().getProjectId() != null) {
+             task.setProject(projectRepository.findById(task.getProject().getProjectId())
+                     .orElseThrow(() -> new RuntimeException("Project not found")));
+         }
+
          TaskEntity savedTask = taskService.saveTask(task);
          return ResponseEntity.ok(savedTask);
      }
@@ -53,6 +84,12 @@ public class TaskController {
         return ResponseEntity.ok(tasks);
     }
 
+    @PatchMapping("/{id}")
+    public ResponseEntity<TaskEntity> updateTaskPartial(@PathVariable Long id, @RequestBody Map<String, Object> updates) {
+        TaskEntity updatedTask = taskService.updatePartial(id, updates);
+        return ResponseEntity.ok(updatedTask);
+    }
+
     // Get task by task_id
     @GetMapping("/{id}")
     public ResponseEntity<TaskEntity> getTaskById(@PathVariable Long id) {
@@ -71,13 +108,6 @@ public class TaskController {
         return ResponseEntity.ok().build();
     }
 
-
-    // Optional: Search tasks by name
-    @GetMapping("/search/{name}")
-    public ResponseEntity<List<TaskEntity>> searchTasksByName(@PathVariable String name) {
-        List<TaskEntity> tasks = taskService.searchTasksByName(name);
-        return ResponseEntity.ok(tasks);
-    }
 
     // Optional: Get tasks by status
     @GetMapping("/status/{status}")

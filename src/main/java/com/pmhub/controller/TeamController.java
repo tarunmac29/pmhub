@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
+@CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequestMapping("/api/teams")
 public class TeamController {
@@ -27,9 +28,10 @@ public class TeamController {
         teamService.deleteTeam(teamId);
     }
 
-    @GetMapping("/project/{projectId}/team")
-    public TeamEntity getTeamByProjectId(@PathVariable Long projectId) {
-        return teamService.getTeamByProjectId(projectId);
+
+    @GetMapping("/project/{projectId}/teams")
+    public List<TeamEntity> getTeamsByProjectId(@PathVariable Long projectId) {
+        return teamService.getTeamsByProjectId(projectId);
     }
 
     @GetMapping("/{teamId}/members")

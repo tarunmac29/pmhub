@@ -1,5 +1,6 @@
 package com.pmhub.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.pmhub.enums.NotificationType;
 import jakarta.persistence.*;
 import lombok.*;
@@ -12,6 +13,7 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class NotificationEntity {
 
     @Id
@@ -27,10 +29,6 @@ public class NotificationEntity {
 
     @Column(nullable = false)
     private Boolean readStatus = false;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "tenant_id", nullable = false)
-    private Tenant tenant;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

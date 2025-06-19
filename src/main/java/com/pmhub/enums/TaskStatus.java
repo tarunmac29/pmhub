@@ -1,7 +1,7 @@
 package com.pmhub.enums;
 
 public enum TaskStatus {
-    TO_DO,
-    IN_PROGRESS,
-    DONE
+    To_Do,
+    In_Progress,
+    Done
 }

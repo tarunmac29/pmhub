@@ -16,7 +16,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-
 public class ProjectEntity {
 
     @Id
@@ -49,9 +48,6 @@ public class ProjectEntity {
     @JoinColumn(name = "created_by", referencedColumnName = "userId")
     private UserEntity createdBy;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "tenant_id", nullable = false)
-    private Tenant tenant;
 
     @Column(nullable = false)
     private LocalDateTime createdAt;

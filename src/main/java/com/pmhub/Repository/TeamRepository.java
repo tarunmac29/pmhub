@@ -9,8 +9,9 @@ import java.util.Optional;
 
 public interface TeamRepository extends JpaRepository<TeamEntity, Long> {
 
-    Optional<TeamEntity> findByProject_ProjectId(Long projectId);
 
+
+    List<TeamEntity> findByProject_ProjectId(Long projectId);
 
 
 }
