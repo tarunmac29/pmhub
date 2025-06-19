@@ -5,14 +5,13 @@ const StatusDropdown = ({ value, onChange }) => {
   const dropdownRef = useRef();
 
   const statusOptions = [
-    { label: "TO DO", value: "To Do", bg: "bg-gray-200", text: "text-gray-800" },
-    { label: "IN PROGRESS", value: "In Progress", bg: "bg-blue-200", text: "text-blue-800" },
-    { label: "DONE", value: "Done", bg: "bg-green-200", text: "text-green-800" },
+    { label: "TO DO", value: "To_Do", bg: "bg-gray-200", text: "text-gray-800" },
+    { label: "IN PROGRESS", value: "In_Progress", bg: "bg-blue-100", text: "text-blue-700 font-semibold" },
+    { label: "DONE", value: "Done", bg: "bg-green-100", text: "text-green-700" },
   ];
 
   const currentStatus = statusOptions.find((opt) => opt.value === value);
 
-  // Close dropdown on outside click
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -24,20 +23,22 @@ const StatusDropdown = ({ value, onChange }) => {
   }, []);
 
   return (
-    <div className="relative w-full text-xs" ref={dropdownRef}>
-      {/* Dropdown Button */}
+    <div className="relative w-24 text-xs" ref={dropdownRef}>
+      {/* Button */}
       <button
         onClick={() => setOpen((prev) => !prev)}
-        className="border rounded-md px-2 py-0.5 flex items-center w-full hover:shadow-sm transition"
+        className="w-full px-0 py-1 flex justify-center items-center bg-white"
       >
-        <span className={`px-1.5 py-0.5 rounded ${currentStatus?.bg} ${currentStatus?.text} font-medium`}>
+        <span
+          className={`px-2 py-0.5 rounded ${currentStatus?.bg} ${currentStatus?.text} text-center w-full`}
+        >
           {currentStatus?.label}
         </span>
       </button>
 
-      {/* Dropdown List */}
+      {/* Dropdown */}
       {open && (
-        <div className="absolute top-full left-0 z-20 mt-1 bg-white border rounded-md shadow-lg w-full text-xs">
+        <div className="absolute top-full left- w-full z-30 mt-1  bg-white rounded shadow text-xs">
           {statusOptions.map((status) => (
             <div
               key={status.value}
@@ -45,9 +46,11 @@ const StatusDropdown = ({ value, onChange }) => {
                 onChange(status.value);
                 setOpen(false);
               }}
-              className="px-2 py-1 cursor-pointer hover:bg-gray-100 flex items-center gap-1"
+              className="cursor-pointer px-2 py-1 hover:bg-gray-100"
             >
-              <span className={`px-1.5 py-0.5 rounded ${status.bg} ${status.text} font-medium`}>
+              <span
+                className={`block w-full text-rigth px-0 py-1 rounded ${status.bg} ${status.text}`}
+              >
                 {status.label}
               </span>
             </div>

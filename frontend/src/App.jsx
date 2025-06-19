@@ -14,6 +14,8 @@ import ProjectDashboard from './pages/Project/ProjectDashboard';
 import TeamsPage from './components/Team-Management/TeamsPage';
 import TeamManage from './components/Team-Management/TeamManage';
 import ListView from './pages/Project/List/ListView'; // ✅ Add this
+import TaskDetailsModal from './pages/Project/List/Task/TaskDetailsModal';
+
 
 
 function App() {
@@ -25,6 +27,7 @@ function App() {
         <Route path="/contact" element={<Contact />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/taskModal" element={<TaskDetailsModal />} />
 
         <Route
           path="/project/:projectId/list-view" 
@@ -36,9 +39,8 @@ function App() {
             </PrivateRoute>
           }
         />
-      
-        
 
+        
 
         <Route
           path="/projectdashboard/:projectId"

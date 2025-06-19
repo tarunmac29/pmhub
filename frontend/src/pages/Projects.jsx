@@ -20,22 +20,19 @@ const Project = () => {
     const payload = {
       name: project.name,
       projectKey: project.key,
-      projectType: project.projectType, // match backend key
+      projectType: project.projectType,
       access: project.access,
       createdBy: {
         userId: 1,
       },
-      tenant: {
-        tenantId: 1,
-      },
     };
-
     try {
       const response = await axios.post("http://localhost:8080/api/projects", payload);
       console.log("Project created successfully:", response.data);
       alert("Project created successfully!");
     } catch (error) {
-      console.error("Error creating project:", error);
+      console.error("Error creating project:", error.response ? error.response.data : error.message);
+      // console.error("Error creating project:", error);
       alert("Failed to create project.");
     }
   };

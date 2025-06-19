@@ -41,9 +41,9 @@ const AddPeopleModal = ({ isOpen, onClose }) => {
       alert("Please select a user and a team.");
       return;
     }
-
     try {
       await axios.post("http://localhost:8080/api/teams/members/addpeople", {
+        withCredentials: true,
         userId: selectedUserId,
         teamId: selectedTeam,
       });

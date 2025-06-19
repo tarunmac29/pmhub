@@ -4,7 +4,9 @@ const AssigneeDropdown = ({ members = [], value, onChange }) => {
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef();
 
-  const selectedUser = members.find((m) => m.username === value);
+  // const selectedUser = members.find((m) => m.username === value);
+
+  const selectedUser = members.find((m) => m.userId === value);
 
   useEffect(() => {
     const handleClickOutside = (e) => {
@@ -36,8 +38,9 @@ const AssigneeDropdown = ({ members = [], value, onChange }) => {
             members.map((member) => (
               <div
                 key={member.userId}
+                value={member.userId}
                 onClick={() => {
-                  onChange(member.username);
+                  onChange(member.userId);
                   setOpen(false);
                 }}
                 className="px-3 py-1.5 cursor-pointer hover:bg-gray-100 transition"
